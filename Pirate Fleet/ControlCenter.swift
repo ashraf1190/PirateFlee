@@ -15,7 +15,16 @@ struct Ship {
     let length: Int
     let location: GridLocation
     let isVertical: Bool
+    
 }
+
+struct Mine: _Mine_ {
+    let location: GridLocation
+    let explosionText: String
+}
+
+
+
 
 class ControlCenter {
     
@@ -33,15 +42,33 @@ class ControlCenter {
         human.addShipToGrid(largShip1)
         human.addShipToGrid(extraLargeShip)
         
+       let mine1 = Mine(location: GridLocation(x:4, y:4), explosionText: "You're Dead")
+        let mine2 = Mine(location: GridLocation(x:1, y:1), explosionText: "You will lose")
         
+        human.addMineToGrid(mine1)
+        human.addMineToGrid(mine2)
+        
+        
+    
+    
         // Write your code here!
     }
     
     func calculateFinalScore(gameStats: GameStats) -> Int {
         
         var finalScore: Int
+        var enemyShipsSunk: Int
+        var humanShipsRemaining: Int
+        var numberOfGuesses: Int
         
-        finalScore = 0                
+        enemyShipsSunk = (5 - gameStats.enemyShipsRemaining)
+        humanShipsRemaining = (gameStats.humanShipsSunk + 5)
+        numberOfGuesses = (gameStats.numberOfHitsOnEnemy + gameStats.numberOfMissesByHuman)
+        
+        finalScore = (enemyShipsSunk * gameStats.sinkBonus) + (humanShipsRemaining * gameStats.shipBonus) - (numberOfGuesses * gameStats.guessPenalty)
+        
+        
+        print("the value of the final score is \(finalScore)")
         
         return finalScore
     }
